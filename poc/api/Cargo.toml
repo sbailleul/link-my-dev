@@ -1,0 +1,21 @@
+[package]
+name = "api"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+rocket ={ version = "0.5.0-rc.2", features = ["json"]} 
+cqrs-es = "0.4.5"
+async-trait = "0.1.58"
+serde = { version = "1.0.14", features = ["derive"]}
+tokio = { version = "1.22.0", features = ["full"] }
+anyhow = "1.0.66"
+thiserror = "1.0.37"
+postgres-es = "0.4.5"
+dotenv = "0.15.0"
+sqlx = "0.6.2"
+dotenv_codegen="0.15.0"
+strum={ version = "0.24", features = ["derive"] }
+strum_macros="0.24.3"

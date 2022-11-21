@@ -1,0 +1,12 @@
+services:
+  link-my-dev-postgres:
+    container_name: link-my-dev-postgres
+    image: postgres
+    restart: unless-stopped
+    volumes:
+      - "./data:/var/lib/postgresql/data"
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: link_my_dev_pwd_22
+      POSTGRES_USER: link_my_dev_user
