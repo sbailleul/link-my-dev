@@ -1,12 +1,22 @@
+use std::sync::Arc;
+
+use actix_web::{web, App, HttpServer};
 use anyhow::Result;
 
-use rocket::{Ignite, Rocket};
+use crate::{
+    collaboration::web::{config_web_collaboration, provide_collaboration_state},
+    Config,
+};
 
-use crate::collaboration::web::add_collaboration;
-use crate::Config;
-
-pub async fn launch_rocket(config: &Config) -> Result<Rocket<Ignite>> {
-    let builder = rocket::build();
-    let builder = add_collaboration( builder, &config).await?;
-    Ok(builder.launch().await?)
+pub async fn launch_actix(config: &'static Config) -> Result<()> {
+    Ok(HttpServer::new(|| {
+        App::new()
+            .data_factory(|| async {
+                 provide_collaboration_state(config).await
+            })
+            .configure(config_web_collaboration)
+    })
+    .bind(("127.0.0.1", 8000))?
+    .run()
+    .await?)
 }

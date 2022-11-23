@@ -1,30 +1,39 @@
-#[macro_use] extern crate dotenv_codegen;
-#[macro_use] extern crate rocket;
-#[macro_use] extern crate strum_macros;
+#![feature(fn_traits)]
 
+#[macro_use]
+extern crate dotenv_codegen;
+#[macro_use]
+extern crate strum_macros;
+#[macro_use]
+extern crate async_trait;
+extern crate env_logger;
 use std::env;
 
 use anyhow::Result;
 use dotenv::dotenv;
 use postgres_es::default_postgress_pool;
+use web::launch_actix;
 
-use crate::bootstrap::Config;
-use crate::web::launch_rocket;
+use crate::config::Config;
 
 mod collaboration;
+mod config;
 mod web;
-mod bootstrap;
 
-#[post("/")]
-fn index() -> &'static str {
-    "Hello, world!"
+lazy_static::lazy_static! {
+    static ref CONFIG: Config = Config::new().unwrap();
 }
 
-
-
-#[rocket::main]
+#[actix_web::main]
 async fn main() -> Result<()> {
-    let bootstrap = Config::new().await?;
-    launch_rocket(&bootstrap).await?;
+    if let Some(rust_log) = CONFIG.clone().rust_log {
+        std::env::set_var("RUST_LOG", rust_log);
+    }
+    if let Some(rust_backtrace) = CONFIG.clone().rust_backtrace {
+        std::env::set_var("RUST_BACKTRACE", rust_backtrace);
+    }
+    env_logger::init();
+    dbg!(&CONFIG.clone());
+    launch_actix(&CONFIG).await?;
     Ok(())
 }

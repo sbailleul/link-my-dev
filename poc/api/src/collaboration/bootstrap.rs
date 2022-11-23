@@ -12,13 +12,17 @@ use crate::collaboration::store::postgres::configure;
 use crate::collaboration::store::postgres::queries::TeamQuery;
 use crate::Config;
 
-pub struct CollaborationState {
+pub struct  PostGresCollaborationState{
     pub cqrs: Arc<PostgresCqrs<Team>>,
     pub views: Arc<PostgresViewRepository<TeamView, Team>>,
 }
+pub trait CollaborationState<ES: EventStore<Team>> {
+    fn cqrs(&self) -> Arc<CqrsFramework<Team, ES>>;
+    fn views(&self) -> Arc<dyn ViewRepository<TeamView, Team>>;
+}
 
-impl CollaborationState {
-    pub async fn new(config: &Config) -> Result<CollaborationState> {
+impl PostGresCollaborationState {
+    pub async fn new(config: &Config) -> Result<PostGresCollaborationState> {
         let (repo, view_repository) = configure(config).await?;
         let simple_query = SimpleLoggingQuery {};
         let view_repository = Arc::new(view_repository);
@@ -36,5 +40,15 @@ impl CollaborationState {
             )),
             views: view_repository.clone(),
         })
+    }
+}
+
+impl CollaborationState<PersistedEventStore<PostgresEventRepository, Team>> for PostGresCollaborationState{
+    fn cqrs(&self) -> Arc<CqrsFramework<Team, PersistedEventStore<PostgresEventRepository, Team>>> {
+        self.cqrs.clone()
+    }
+
+    fn views(&self) -> Arc<dyn ViewRepository<TeamView, Team>> {
+        self.views.clone()
     }
 }
