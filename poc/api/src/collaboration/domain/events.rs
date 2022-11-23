@@ -1,7 +1,7 @@
 use cqrs_es::DomainEvent;
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 pub enum TeamEvent {
     TeamCreated { id: String, name: String }
 }

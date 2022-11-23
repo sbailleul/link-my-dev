@@ -7,11 +7,11 @@ extern crate strum_macros;
 #[macro_use]
 extern crate async_trait;
 extern crate env_logger;
-use std::env;
+
 
 use anyhow::Result;
-use dotenv::dotenv;
-use postgres_es::default_postgress_pool;
+
+
 use web::launch_actix;
 
 use crate::config::Config;

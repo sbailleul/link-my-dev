@@ -1,10 +1,10 @@
 pub mod queries;
 
 use anyhow::Result;
-use cqrs_es::persist::ViewRepository;
-use cqrs_es::EventStore;
+
+
 use postgres_es::{
-    default_postgress_pool, PostgresCqrs, PostgresEventRepository, PostgresViewRepository,
+    default_postgress_pool, PostgresEventRepository, PostgresViewRepository,
 };
 
 use crate::collaboration::application::queries::TeamView;
@@ -26,6 +26,6 @@ pub async fn configure(
     )
     .await;
     let event_store = PostgresEventRepository::new(pool.clone());
-    let view_repository = PostgresViewRepository::new("team", pool.clone());
+    let view_repository = PostgresViewRepository::new("team", pool);
     Ok((event_store, view_repository))
 }

@@ -1,6 +1,6 @@
-use std::sync::Arc;
 
-use actix_web::{web, App, HttpServer};
+
+use actix_web::{App, HttpServer};
 use anyhow::Result;
 
 use crate::{

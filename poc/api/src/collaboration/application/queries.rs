@@ -1,9 +1,9 @@
 use cqrs_es::{EventEnvelope, Query, View};
-use cqrs_es::persist::GenericQuery;
-use postgres_es::PostgresViewRepository;
+
+
 use serde::{Deserialize, Serialize};
 use async_trait::async_trait;
-use crate::collaboration::domain::events::TeamEvent;
+
 use crate::collaboration::domain::events::TeamEvent::TeamCreated;
 use crate::collaboration::domain::team::Team;
 

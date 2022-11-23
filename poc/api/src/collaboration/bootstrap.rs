@@ -1,10 +1,10 @@
 use std::sync::Arc;
 
 use anyhow::Result;
-use cqrs_es::persist::{PersistedEventRepository, PersistedEventStore, ViewRepository};
-use cqrs_es::{AggregateContext, CqrsFramework, EventStore, Query};
+use cqrs_es::persist::{PersistedEventStore, ViewRepository};
+use cqrs_es::{CqrsFramework, EventStore, Query};
 use postgres_es::{PostgresCqrs, PostgresEventRepository, PostgresViewRepository};
-use sqlx::{Pool, Postgres};
+
 
 use crate::collaboration::application::queries::{SimpleLoggingQuery, TeamView};
 use crate::collaboration::domain::team::Team;
@@ -38,7 +38,7 @@ impl PostGresCollaborationState {
                 queries,
                 (),
             )),
-            views: view_repository.clone(),
+            views: view_repository,
         })
     }
 }

@@ -1,4 +1,4 @@
 Cargo.lock
 .idea
-postgres/data
+data
 target

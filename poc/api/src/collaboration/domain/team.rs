@@ -1,4 +1,4 @@
-use cqrs_es::{Aggregate, DomainEvent};
+use cqrs_es::{Aggregate};
 use serde::{Deserialize, Serialize};
 
 use crate::collaboration::domain::commands::TeamCommand;
@@ -29,7 +29,7 @@ impl Aggregate for Team{
         "Team".to_string()
     }
 
-    async fn handle(&self, command: Self::Command, service: &Self::Services) -> Result<Vec<Self::Event>, Self::Error> {
+    async fn handle(&self, command: Self::Command, _service: &Self::Services) -> Result<Vec<Self::Event>, Self::Error> {
         let event = match command {
             TeamCommand::Create { team_id, name } => {
                 TeamCreated {id: team_id, name}
