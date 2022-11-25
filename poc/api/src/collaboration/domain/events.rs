@@ -3,13 +3,15 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 pub enum TeamEvent {
-    TeamCreated { id: String, name: String }
+    TeamCreated { id: String, name: String },
+    NameChanged { id: String, name: String }
 }
 
 impl DomainEvent for TeamEvent {
     fn event_type(&self) -> String {
         let event_type = match self {
-            TeamEvent::TeamCreated { .. } => "AccountOpened"
+            TeamEvent::TeamCreated { .. } => "TeamCreated",
+            TeamEvent::NameChanged { .. } => "NameChanged",
         };
         event_type.to_string()
     }

@@ -8,6 +8,8 @@ use dotenv_codegen::dotenv;
 use std::str::FromStr;
 use strum_macros::EnumString;
 
+use crate::collaboration::config::CollaborationConfig;
+
 #[derive( EnumString, Debug, Clone)]
 pub enum Environment {
     DEVELOP,
@@ -16,11 +18,10 @@ pub enum Environment {
 
 #[derive(Debug, Clone)]
 pub struct Config {
-    
     pub rust_log: Option<String>,
     pub rust_backtrace: Option<String>,
     pub env: Environment,
-    pub collaboration_connection_string: Option<String>,
+    pub collaboration_config: CollaborationConfig
 }
 
 impl Config {
@@ -28,9 +29,9 @@ impl Config {
         let env = Environment::from_str(dotenv!("ENVIRONMENT"));
         Ok(Self {
             env: env.unwrap_or(Environment::DEVELOP),
-            collaboration_connection_string: Some(dotenv!("DATABASE_URL").to_owned()),
             rust_log: Some(dotenv!("RUST_LOG").to_owned()),
             rust_backtrace: Some(dotenv!("RUST_BACKTRACE").to_owned()),
+            collaboration_config: CollaborationConfig::new()
         })
     }
 }

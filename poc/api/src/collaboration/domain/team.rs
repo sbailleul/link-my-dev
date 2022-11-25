@@ -30,10 +30,12 @@ impl Aggregate for Team{
     }
 
     async fn handle(&self, command: Self::Command, _service: &Self::Services) -> Result<Vec<Self::Event>, Self::Error> {
+        dbg!(&command);
         let event = match command {
             TeamCommand::Create { team_id, name } => {
                 TeamCreated {id: team_id, name}
             }
+            TeamCommand::ChangeName(name) => TeamEvent::NameChanged { id: self.id.clone(), name },
         };
         Ok(vec![event])
     }
@@ -44,6 +46,7 @@ impl Aggregate for Team{
                 self.name = name;
                 self.id = id;
             }
+            TeamEvent::NameChanged { id: _, name } => self.name = name
         }
     }
 }

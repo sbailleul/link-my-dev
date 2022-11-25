@@ -19,6 +19,7 @@ use crate::config::Config;
 mod collaboration;
 mod config;
 mod web;
+mod common;
 
 lazy_static::lazy_static! {
     static ref CONFIG: Config = Config::new().unwrap();

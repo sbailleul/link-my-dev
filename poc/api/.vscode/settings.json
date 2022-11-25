@@ -1,5 +1,17 @@
 {
     "cSpell.words": [
         "cqrs"
+    ],
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 5432,
+            "driver": "PostgreSQL",
+            "name": "link_my_dev",
+            "username": "link_my_dev_user",
+            "password": "link_my_dev_pwd_22",
+            "database": "link_my_dev"
+        }
     ]
 }

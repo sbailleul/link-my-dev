@@ -1,12 +1,23 @@
 services:
-  link-my-dev-postgres:
-    container_name: link-my-dev-postgres
-    image: postgres
-    restart: unless-stopped
-    volumes:
-      - "./data:/var/lib/postgresql/data"
-    ports:
-      - 5432:5432
-    environment:
-      POSTGRES_PASSWORD: link_my_dev_pwd_22
-      POSTGRES_USER: link_my_dev_user
+    link-my-dev-postgres:
+        container_name: link-my-dev-postgres
+        image: postgres
+        restart: unless-stopped
+        volumes:
+            - "./data/postgres:/var/lib/postgresql/data"
+        ports:
+            - 5432:5432
+        environment:
+            POSTGRES_PASSWORD: link_my_dev_pwd_22
+            POSTGRES_USER: link_my_dev_user
+    link-my-dev-mongodb:
+        container_name: link-my-dev-mongodb
+        image: mongo:5.0
+        ports:
+            - 27017:27017
+        restart: unless-stopped
+        volumes:
+            - ./data/mongodb:/data/db
+        environment:
+            - MONGO_INITDB_ROOT_USERNAME=link_my_dev_user
+            - MONGO_INITDB_ROOT_PASSWORD=link_my_dev_pwd_22
