@@ -23,4 +23,6 @@ strum={ version = "0.24", features = ["derive"] }
 strum_macros="0.24.3"
 lazy_static="1.4.0"
 uuid = {version="1.2.2", features = ["v4","fast-rng","macro-diagnostics"]}
-mongodb="2.3.1"
+mongodb={version="2.3.1"}
+futures="0.3.25"
+bson={version="2.4.0", features=["uuid-1"]}

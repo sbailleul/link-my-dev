@@ -1,10 +1,10 @@
-use cqrs_es::{EventEnvelope, Query, View};
+use cqrs_es::{EventEnvelope, Query};
 
 
-use serde::{Deserialize, Serialize};
+
 use async_trait::async_trait;
 
-use crate::collaboration::domain::events::TeamEvent::{TeamCreated, NameChanged};
+
 use crate::collaboration::domain::team::Team;
 
 pub struct SimpleLoggingQuery {}

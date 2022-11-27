@@ -1,5 +1,6 @@
 use cqrs_es::{Aggregate};
 use serde::{Deserialize, Serialize};
+use uuid::Uuid;
 
 use crate::collaboration::domain::commands::TeamCommand;
 use crate::collaboration::domain::events::TeamEvent;
@@ -15,7 +16,7 @@ pub enum TeamError{
 #[derive(Serialize, Default, Deserialize)]
 pub struct Team{
     name: String,
-    id: String
+    id: Uuid
 }
 
 #[async_trait]
@@ -35,7 +36,7 @@ impl Aggregate for Team{
             TeamCommand::Create { team_id, name } => {
                 TeamCreated {id: team_id, name}
             }
-            TeamCommand::ChangeName(name) => TeamEvent::NameChanged { id: self.id.clone(), name },
+            TeamCommand::ChangeName(name) => TeamEvent::NameChanged { id: self.id, name },
         };
         Ok(vec![event])
     }

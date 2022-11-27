@@ -1,4 +1,8 @@
+use serde::{Serialize, Deserialize};
+use uuid::Uuid;
+
+#[derive(Serialize, Deserialize, Debug)]
 pub struct TeamView {
-    pub id: String,
+    pub id: Uuid,
     pub name: String,
 }

@@ -2,7 +2,9 @@ use actix_web::{web::Data, App, HttpServer};
 use anyhow::Result;
 
 use crate::{
-    collaboration::{persistence::postgres::get_pool, web::config_web_collaboration, read::mongodb::get_client},
+    collaboration::{
+        persistence::postgres::get_pool, read::mongodb::get_client, web::config_web_collaboration,
+    },
     common::web::AppData,
     Config,
 };
@@ -14,7 +16,12 @@ pub async fn launch_actix(config: &'static Config) -> Result<()> {
         App::new()
             .app_data(Data::new(AppData::new()))
             .configure(|service_conf| {
-                config_web_collaboration(service_conf, collaboration_postgres_pool.clone())
+                config_web_collaboration(
+                    service_conf,
+                    collaboration_postgres_pool.clone(),
+                    collaboration_mongodb_client.clone(),
+                    &config.collaboration_config.clone(),
+                )
             })
     })
     .bind(("127.0.0.1", 8000))?

@@ -1,10 +1,11 @@
 use actix_web::{web, HttpResponse, Responder};
 use cqrs_es::EventStore;
 use serde::{Deserialize, Serialize};
+use uuid::Uuid;
 
 use crate::{
     collaboration::{
-        domain::{commands::TeamCommand, team::Team}, application::CollaborationState,
+        domain::{commands::TeamCommand, team::Team}, application::{CollaborationState, TeamViewRepository},
     },
     common::web::AppData,
 };
@@ -26,7 +27,7 @@ pub async fn create_team<ES: EventStore<Team>, C: CollaborationState<ES>>(
     collaboration
         .cqrs()
         .execute(
-            &team_id.clone(),
+            &team_id.to_string(),
             TeamCommand::Create {
                 team_id,
                 name: request.name,
@@ -42,7 +43,7 @@ pub struct UpdateTeamRequest {
     name: String,
 }
 pub async fn update_team<ES: EventStore<Team>, C: CollaborationState<ES>>(
-    team_id: web::Path<String>,
+    team_id: web::Path<Uuid>,
     web::Json(request): web::Json<UpdateTeamRequest>,
     collaboration: web::Data<C>,
 ) -> impl Responder {
@@ -51,11 +52,8 @@ pub async fn update_team<ES: EventStore<Team>, C: CollaborationState<ES>>(
     collaboration
         .cqrs()
         .execute(
-            &team_id,
-            TeamCommand::Create {
-                team_id: team_id.clone(),
-                name: request.name,
-            },
+            &team_id.to_string(),
+            TeamCommand::ChangeName(request.name)
         )
         .await;
     HttpResponse::Ok().json(cmd)
@@ -64,5 +62,5 @@ pub async fn update_team<ES: EventStore<Team>, C: CollaborationState<ES>>(
 pub async fn get_teams<ES: EventStore<Team>, C: CollaborationState<ES>>(
     collaboration: web::Data<C>,
 ) -> impl Responder {
-    HttpResponse::Ok()
+    HttpResponse::Ok().json(collaboration.team_views().get_all().await.unwrap())
 }

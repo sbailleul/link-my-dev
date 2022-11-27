@@ -1,10 +1,11 @@
 use cqrs_es::DomainEvent;
 use serde::{Deserialize, Serialize};
+use uuid::Uuid;
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 pub enum TeamEvent {
-    TeamCreated { id: String, name: String },
-    NameChanged { id: String, name: String }
+    TeamCreated { id: Uuid, name: String },
+    NameChanged { id: Uuid, name: String }
 }
 
 impl DomainEvent for TeamEvent {

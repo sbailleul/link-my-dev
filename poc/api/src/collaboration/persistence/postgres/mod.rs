@@ -1,10 +1,10 @@
 
 use anyhow::Result;
 
-use postgres_es::{default_postgress_pool, PostgresEventRepository, PostgresViewRepository};
+use postgres_es::{default_postgress_pool};
 use sqlx::{Pool, Postgres};
 
-use crate::{Config, collaboration::config::CollaborationConfig};
+use crate::{collaboration::config::CollaborationConfig};
 
 pub async fn get_pool(config: &CollaborationConfig) -> Result<Pool<Postgres>> {
     let pool = default_postgress_pool(
