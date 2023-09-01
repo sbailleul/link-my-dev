@@ -1,21 +1,28 @@
 
-
 use mongodb::{Client};
-use serde::Serialize;
-
-
+use serde::{Deserialize, Serialize};
 
 #[derive(Clone)]
-pub struct MongoClient{
+pub struct MongoClient {
     client: Client,
     database: String,
-    collection: String
+    collection: String,
 }
 impl MongoClient {
-    pub fn new(client: Client, database: String, collection: String)-> Self{
-        Self{client,collection,database}
+    pub fn new(client: Client, database: String, collection: String) -> Self {
+        Self {
+            client,
+            collection,
+            database,
+        }
     }
-    pub fn collection<Item: Serialize>(&self) -> mongodb::Collection<Item>{
-        self.client.database(&self.database).collection::<Item>(&self.collection)
+    pub async fn collection<'de, Item: Serialize + Deserialize<'de>>(
+        &self,
+    ) -> mongodb::Collection<Item> {
+        
+        self
+            .client
+            .database(&self.database)
+            .collection::<Item>(&self.collection)
     }
 }

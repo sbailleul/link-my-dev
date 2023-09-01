@@ -1,12 +1,11 @@
 use std::sync::Arc;
 
-use cqrs_es::{CqrsFramework, EventStore};
-use anyhow::Result;
 use self::views::TeamView;
+use anyhow::Result;
+use cqrs_es::{CqrsFramework, EventStore};
 
 use super::domain::team::Team;
 
-pub mod queries;
 pub mod views;
 
 pub trait CollaborationState<ES: EventStore<Team>> {
@@ -17,4 +16,5 @@ pub trait CollaborationState<ES: EventStore<Team>> {
 #[async_trait]
 pub trait TeamViewRepository {
     async fn get_all(&self) -> Result<Vec<TeamView>>;
+    async fn get_by_id(&self, id: &uuid::Uuid) -> Result<Option<TeamView>>;
 }

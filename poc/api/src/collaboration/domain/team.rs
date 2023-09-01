@@ -1,22 +1,28 @@
-use cqrs_es::{Aggregate};
+use cqrs_es::Aggregate;
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
 use crate::collaboration::domain::commands::TeamCommand;
 use crate::collaboration::domain::events::TeamEvent;
 use crate::collaboration::domain::events::TeamEvent::TeamCreated;
+use crate::common::domain::entity::Entity;
 use thiserror::Error;
+
+use super::member::{MemberId, Member};
 
 #[derive(Error, Debug)]
 pub enum TeamError{
     #[error("Invalid name {0}")]
     InvalidName(String)
 }
+#[derive(Serialize, Default, Deserialize, Debug)]
+pub struct TeamId(Uuid);
 
-#[derive(Serialize, Default, Deserialize)]
+#[derive(Serialize, Default, Deserialize, Debug)]
 pub struct Team{
     name: String,
-    id: Uuid
+    id: TeamId,
+    owner: Member
 }
 
 #[async_trait]
@@ -33,10 +39,10 @@ impl Aggregate for Team{
     async fn handle(&self, command: Self::Command, _service: &Self::Services) -> Result<Vec<Self::Event>, Self::Error> {
         dbg!(&command);
         let event = match command {
-            TeamCommand::Create { team_id, name } => {
+            TeamCommand::Create { team_id, name , owner_id: Uuid} => {
                 TeamCreated {id: team_id, name}
             }
-            TeamCommand::ChangeName(name) => TeamEvent::NameChanged { id: self.id, name },
+            TeamCommand::ChangeName(name) => TeamEvent::NameChanged { id: self.id.0, name },
         };
         Ok(vec![event])
     }
@@ -45,9 +51,10 @@ impl Aggregate for Team{
         match event {
             TeamCreated { name, id    } => {
                 self.name = name;
-                self.id = id;
+                self.id = TeamId(id);
             }
             TeamEvent::NameChanged { id: _, name } => self.name = name
         }
     }
 }
+

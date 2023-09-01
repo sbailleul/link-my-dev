@@ -7,18 +7,16 @@ use mongodb::Client;
 use postgres_es::{PostgresCqrs, PostgresEventRepository};
 use sqlx::{Pool, Postgres};
 
-use crate::collaboration::application::queries::SimpleLoggingQuery;
 use crate::collaboration::domain::team::Team;
 
 use super::application::CollaborationState;
 use super::config::CollaborationConfig;
-
-use super::read::mongodb::TeamViewRepository;
+use super::read::mongodb::teams::TeamViewRepository;
 
 #[derive(Clone)]
 pub struct PostGresCollaborationState {
     pub cqrs: Arc<PostgresCqrs<Team>>,
-    pub team_views: Arc<TeamViewRepository>
+    pub team_views: Arc<TeamViewRepository>,
 }
 impl PostGresCollaborationState {
     pub fn new(
@@ -27,20 +25,19 @@ impl PostGresCollaborationState {
         config: &CollaborationConfig,
     ) -> Result<PostGresCollaborationState> {
         let event_repository = PostgresEventRepository::new(db_pool);
-        let simple_query = SimpleLoggingQuery {};
         let view_repository = TeamViewRepository::new(
             mongo_client,
             config.read_store_database.clone().unwrap(),
             config.read_store_teams_collection.clone().unwrap(),
         );
-        let queries: Vec<Box<dyn Query<Team>>> = vec![Box::new(simple_query), Box::new(view_repository.clone())];
+        let queries: Vec<Box<dyn Query<Team>>> = vec![Box::new(view_repository.clone())];
         Ok(Self {
             cqrs: Arc::new(CqrsFramework::new(
                 PersistedEventStore::new_event_store(event_repository),
                 queries,
                 (),
             )),
-            team_views: Arc::new(view_repository)
+            team_views: Arc::new(view_repository),
         })
     }
 }

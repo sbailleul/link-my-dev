@@ -1,18 +1,16 @@
 use cqrs_es::DomainEvent;
 use serde::{Deserialize, Serialize};
-use uuid::Uuid;
+
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
-pub enum TeamEvent {
-    TeamCreated { id: Uuid, name: String },
-    NameChanged { id: Uuid, name: String },
+pub enum AccountEvent {
+    AccountRegistered { id: String, email: String },
 }
 
-impl DomainEvent for TeamEvent {
+impl DomainEvent for AccountEvent {
     fn event_type(&self) -> String {
         let event_type = match self {
-            TeamEvent::TeamCreated { .. } => "TeamCreated",
-            TeamEvent::NameChanged { .. } => "NameChanged",
+            AccountEvent::AccountRegistered { .. } => "AccountRegistered",
         };
         event_type.to_string()
     }

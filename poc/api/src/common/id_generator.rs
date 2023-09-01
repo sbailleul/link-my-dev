@@ -1,6 +1,6 @@
 use uuid::Uuid;
 
-pub trait IdGenerator{
+pub trait IdGenerator {
     fn new_id(&self) -> Uuid;
 }
 

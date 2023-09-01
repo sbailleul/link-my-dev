@@ -12,7 +12,7 @@ CREATE TABLE events
 );
 
 CREATE TABLE snapshots
-(
+(   
     aggregate_type   text                                 NOT NULL,
     aggregate_id     text                                 NOT NULL,
     last_sequence    bigint CHECK (last_sequence >= 0)    NOT NULL,

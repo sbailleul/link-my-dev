@@ -8,18 +8,17 @@ extern crate strum_macros;
 extern crate async_trait;
 extern crate env_logger;
 
-
 use anyhow::Result;
-
 
 use web::launch_actix;
 
 use crate::config::Config;
 
 mod collaboration;
-mod config;
-mod web;
 mod common;
+mod config;
+mod identity;
+mod web;
 
 lazy_static::lazy_static! {
     static ref CONFIG: Config = Config::new().unwrap();
